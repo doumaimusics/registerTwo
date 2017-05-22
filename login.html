@@ -15,12 +15,29 @@
 	    		Create Account
 	    	</header>
 	    	<!--表单-->
-	    	<form action="">
+	    	<form action="" id="form">
 	    		<div class="m-forms-box">
-	    			<!--登录框-->
+	    			
+	    			<!--email输入-->
+                   	<div class="u-import-box">
+                   		<div class="u-icon">
+                   			<i class="u-icon-logo"></i>
+                   		</div>
+                   		<div class="u-field1 input-box">
+						  <input type="email" name="email" id="email" placeholder="Enter your Email " value="" id="email">
+                   			
+                   		</div>
+                        <div class="u-clear-icon">
+	    		   	  	     <i></i>
+	    		   	    </div>
+					</div>
+	    			
+	    			
+	    			
+	    			<!--手机输入框-->
 	    		   <div class="u-import-box">
 	    		   	  <div class="u-icon"><i class="u-icon-logo"></i></div>	    		   	  
-	    		   	  <div class="u-field1">
+	    		   	  <div class="u-field1 input-box">
 	    		   	  	<input type="tel" placeholder="Please enter the cell phone numbe" maxlength="11" id="phone-code"/>
 	    		   	  </div>	
 
@@ -31,7 +48,7 @@
 	    		   <!--图片验证码-->
 	    		   <div class="u-import-box">
 	    		   	  <div class="u-icon"><i class="u-icon-logo"></i></div>
-	    		   	  <div class="u-field2">
+	    		   	  <div class="u-field2 input-box">
 	    		   	  	<input type="text" placeholder="Please verify the code on the right" id="yanzheng1" value=""/>
 	    		   	  </div>
 	    		   	  <div class="u-clear-icon"><i></i></div>
@@ -40,7 +57,7 @@
 	    		   <!--手机验证码-->
 	    		   <div class="u-import-box">
 	    		   	  <div class="u-icon"><i class="u-icon-logo"></i></div>
-	    		   	  <div class="u-field3">
+	    		   	  <div class="u-field3 input-box">
 	    		   	  	<input type="tel" placeholder="Verification Code" maxlength="6" id="yanzheng2"/>
 	    		   	  </div>	
 	    		   	  <div class="u-clear-icon">
@@ -71,7 +88,59 @@
 <script type="text/javascript" src="js/gVerify.js"></script>
 <script type="text/javascript">
 $(function(){	
-	 //发送验证码倒计时
+
+
+     //判断输入邮箱是否正确的邮箱格式
+     $('#email').blur(function(){
+     	var email = $('#email').val();
+     	if (email!='') {
+     		if(!/^[0-9a-zA-Z._-]+@(([0-9a-zA-Z_-]+)[-]?([0-9a-zA-Z]+)[.])+[a-z]{2,10}$/.test($.trim(email))){
+     		alert('邮箱输入格式不正确');
+     		$(this).val('').focus();
+     		return false;
+     	} else if (/^[0-9a-zA-Z._-]+@(([0-9a-zA-Z_-]+)[-]?([0-9a-zA-Z]+)[.])+[a-z]{2,10}$/.test($.trim(email))) {
+     		alert('邮箱输入格式正确')
+     		return true;     		
+     	}
+     		
+     	}
+
+     })
+
+	
+    //判断手机号是否输入正确
+	$('#phone-code').blur(function(){		
+			var ph=/^1[3|5|7|8|][0-9]{9}$/
+			if ($('#phone-code').val()!='') {
+				if(!(ph.test($('#phone-code').val()))){
+					alert('请输入正确的手机号码');
+					$(this).val('').focus();
+					return false;
+				}else if(ph){
+					return true;
+				}
+			}else{
+				
+			}
+		
+		
+	})
+		
+		
+    //判断图片验证码是否输入正确
+    var verifyCode = new GVerify("u-yz-img");
+    document.getElementById('u-btn-box').onclick=function(){
+	var res = verifyCode.validate(document.getElementById("yanzheng1").value);    
+   	if(res){
+//				alert("验证正确");
+			}else{
+				alert("验证码错误");			
+				return false;
+			}
+    }	
+		
+		
+    //发送验证码倒计时
 	var countdown = 60;
 	function sendemail(){
 		var obj = $('#yz-btn');
@@ -95,28 +164,14 @@ $(function(){
 	//发用验证码
 	$('.u-yz-box').click(function(){		
 		sendemail();
-	})
-	
-    //判断手机号是否输入正确
-	$('#phone-code').blur(function(){		
-			var ph=/^1[3|5|7|8|][0-9]{9}$/
-			if ($('#phone-code').val()!='') {
-				if(!(ph.test($('#phone-code').val()))){
-					alert('请输入正确的手机号码');
-					$(this).val('').focus();
-					return false;
-				}else if(ph){
-					return true;
-				}
-			}else{
-				
-			}
+	})	
 		
 		
-	})
-			
+		
+		
+		
 	//清除输入框里内容js
-	$('.u-field1,.u-field2,.u-field3').click(function(e){
+	$('.input-box').click(function(e){
 		$('.u-clear-icon').hide();
 		$(this).next('.u-clear-icon').show();
 		$(this).find('input').focus();
@@ -132,8 +187,8 @@ $(function(){
 	})
 	
 	//判断输入框里是否有内容，如果有注册按钮变亮。
-	$('.u-field1,.u-field2,.u-field3').find('input').keyup(function(){
-		if ($('#phone-code').val()!=''&&$('#yanzheng1').val()!=''&&$('#yanzheng2').val()!='') {
+	$('.input-box').find('input').keyup(function(){
+		if ($('#email').val()!=''&&$('#phone-code').val()!=''&&$('#yanzheng1').val()!=''&&$('#yanzheng2').val()!='') {
 			$('.u-btn-box').addClass('active');
 		} else{
 			$('.u-btn-box').removeClass('active');			
@@ -143,30 +198,23 @@ $(function(){
 	//点击注册按钮提示的信息
 	$('.error').hide();
 	$('.u-btn-box').click(function(){
-		if ($('#phone-code').val()==='') {
+		if ($('#email').val()=='') {
+			$('.error').fadeIn().delay(1000).fadeOut();
+			$('.error').text('邮箱不为空');			
+		} else if ($('#email').val()!==''&&$('#phone-code').val()==='') {
 			$('.error').fadeIn().delay(1000).fadeOut();
 			$('.error').text('手机号不能为空');
 		} else if($('#phone-code').val()!=''&&$('#yanzheng1').val()===''){
 			$('.error').fadeIn().delay(1000).fadeOut();
-			$('.error').text('验证码不能为空');
+			$('.error').text('图片验证码不能为空');
 		}else if ($('#phone-code').val()!=''&&$('#yanzheng1').val()!=''&&$('#yanzheng2').val()==='') {
 			$('.error').fadeIn().delay(1000).fadeOut();
 			$('.error').text('请填写手机验证码');
 			
 		}
+		
+		$('#form').submit();
 	})
-	
-	
-	    //图片验证码
-    var verifyCode = new GVerify("u-yz-img");
-    document.getElementById('u-btn-box').onclick=function(){
-	var res = verifyCode.validate(document.getElementById("yanzheng1").value);    
-   	if(res){
-				alert("验证正确");
-			}else{
-				alert("验证码错误");
-			}
-    }
 
 })
 
